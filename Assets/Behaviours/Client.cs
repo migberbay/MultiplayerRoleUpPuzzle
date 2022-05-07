@@ -10,8 +10,8 @@ public class Client : MonoBehaviour {
 	#region private members 	
 	private TcpClient socketConnection; 	
 	private Thread clientReceiveThread; 	
-    string ip;
-    int port;
+    private string ip;
+    private int port;
 	#endregion  	
 
 	// Use this for initialization 	
@@ -21,12 +21,12 @@ public class Client : MonoBehaviour {
 		ConnectToTcpServer();
     }
 
-	// Update is called once per frame
-	void Update () {         
-		if (Input.GetKeyDown(KeyCode.Space)) {             
-			SendMessageToServer("Client Test Message");         
-		}     
-	}  
+	// // Update is called once per frame
+	// void Update () {         
+	// 	if (Input.GetKeyDown(KeyCode.Space)) {             
+	// 		SendMessageToServer("Client Test Message");         
+	// 	}     
+	// }  
 
 	/// <summary> 	
 	/// Setup socket connection. 	
@@ -68,6 +68,7 @@ public class Client : MonoBehaviour {
 			Debug.Log("Socket exception: " + socketException);         
 		}     
 	}  	
+
 	/// <summary> 	
 	/// Send message to server using socket connection. 	
 	/// </summary> 	

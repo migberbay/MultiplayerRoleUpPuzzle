@@ -1,14 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine.SceneManagement;
 using UnityEngine;
-using System;
-using System.Net.Sockets;
 
+[RequireComponent(typeof(Server))]
+[RequireComponent(typeof(Client))]
 public class ConnectionManager : MonoBehaviour
 {
     public bool isHost = false;
-    public int port = 42069, clientID=0;
+    public int port = 42069, clientID = 0;
     public string ip = "localhost", username = "";
     
     Server server;
@@ -37,24 +34,41 @@ public class ConnectionManager : MonoBehaviour
     }
 
     public void StopServer(){
-        // well, that...
+        // TODO: send a message to all clients
     }
 
+    //Client Only Functions:
     public void SendMessageToServer(string message){
         if(isHost){return;}
         client.SendMessageToServer(message);
     }
 
-    public void SendMessageToClients(string message, int clientID){
-        if(isHost){return;}
-        
+    //Server Only Functions:
+    public void SendMessageToClient(int clientID, string message){
+        if(!isHost){return;}
+        server.SendMessageToClient(clientID, message);
     }
 
+    public void BroadcastClients(string message){
+        if(!isHost){return;}
+        var n = server.connectedTcpClients.Count;
+        for (int i = 1; i <= n; i++)
+        { 
+            server.SendMessageToClient(i, message);
+        }
+    }
+
+    //
     void OpenPort(){
-        // Try to UPnP the port tht was indicated.
+        // Try to UPnP the port that was indicated.
     }
 
     void OnApplicationQuit() {
-        StopServer();
+        if(isHost){
+            StopServer();
+        }
+        else{
+
+        }
     }
 }

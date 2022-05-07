@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class MainMenu : MonoBehaviour
@@ -18,6 +19,7 @@ public class MainMenu : MonoBehaviour
         var port_text = portInputFieldJClient.text;
         if(ValidateIP(ip_text) && ValidatePort(port_text)){
             connManager.StartAsClient(port_text, ip_text);
+            SceneManager.LoadScene("MainScene");
         }else{StartCoroutine(clearErrorAfterSeconds(4));}
     }
 
@@ -25,6 +27,7 @@ public class MainMenu : MonoBehaviour
         var port_text = portInputFieldHost.text;
         if(ValidatePort(port_text)){
             connManager.StartAsServer(port_text);
+            SceneManager.LoadScene("MainScene");
         }else{StartCoroutine(clearErrorAfterSeconds(4));}
     }
 
@@ -34,8 +37,7 @@ public class MainMenu : MonoBehaviour
     }
 
     bool ValidateIP(string ip){
-        var regex = "/^((?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])[.]){3}(?:[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])$/";
-        Regex re = new Regex(regex);
+        Regex re = new Regex(@"^([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])$");
         var res = re.IsMatch(ip);
         if(!res){
             errorMessageText.text = "That IP is Invalid";   
@@ -58,5 +60,16 @@ public class MainMenu : MonoBehaviour
             Debug.Log(e.ToString());   
             return false;
         } 
+    }
+
+    private void changeSceneAs(string actor){
+        if(actor == "host"){
+
+        }
+
+        if(actor == "client"){
+
+
+        }
     }
 }

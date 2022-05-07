@@ -5,20 +5,32 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public float movementSpeedMultiplier = 0.045f;
+    public bool isLocalControlled = true;
+    public int clientID = 0;
     CharacterController m_charController;
     Vector3 frameMovement = Vector3.zero;
 
 
     void Start(){
         m_charController = this.GetComponent<CharacterController>();
+        StartCoroutine(TransformSyncer());
     }
 
     void Update(){
-        MovementInput();
+        if(isLocalControlled){MovementInput();}
+
     }
 
     void FixedUpdate() {
-        DoMovement();
+       if(isLocalControlled){DoMovementLocal();}
+       
+    }
+
+    IEnumerator TransformSyncer(){
+        // send new transform values to server 4 times a second.
+        while(true){
+            yield return new WaitForSeconds(0.25f);
+        }
     }
 
     void MovementInput(){
@@ -40,7 +52,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void DoMovement(){
+    void DoMovementLocal(){
         // multiply by factor
         frameMovement *= movementSpeedMultiplier;
         //a apply physics
