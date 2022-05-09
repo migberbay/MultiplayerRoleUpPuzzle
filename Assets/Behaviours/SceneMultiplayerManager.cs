@@ -4,15 +4,21 @@ using UnityEngine;
 
 public class SceneMultiplayerManager : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public List<NetworkObject> SyncObjects = new List<NetworkObject>();
+
     void Start()
     {
-        
+        // find all network objects in scene and add them to the syncObject list
+        SyncObjects.AddRange(FindObjectsOfType<NetworkObject>());
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    IEnumerator SendSyncObjectsData(){
+        while(true){
+            yield return new WaitForSeconds(0.2f);
+            foreach(var o in SyncObjects){
+                
+            }
+        }
     }
+    
 }

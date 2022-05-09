@@ -33,9 +33,6 @@ public class ConnectionManager : MonoBehaviour
         client.Initialize(ip, port);
     }
 
-    public void StopServer(){
-        // TODO: send a message to all clients
-    }
 
     //Client Only Functions:
     public void SendMessageToServer(string message){
@@ -58,9 +55,17 @@ public class ConnectionManager : MonoBehaviour
         }
     }
 
-    //
+    // Extra functions
     void OpenPort(){
         // Try to UPnP the port that was indicated.
+    }
+
+    public void StopServer(){
+        // TODO: send a message to all clients
+    }
+
+    public void DisconnectClient(){
+        // TODO: send message to server telling it to disconnect client.
     }
 
     void OnApplicationQuit() {
@@ -68,7 +73,7 @@ public class ConnectionManager : MonoBehaviour
             StopServer();
         }
         else{
-
+            DisconnectClient();
         }
     }
 }
