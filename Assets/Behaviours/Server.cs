@@ -32,7 +32,9 @@ public class Server : MonoBehaviour {
 	#endregion 	
 		
 	// Default port, next unasigned client index
-    private int port = 42069, lastClientIndex = 1;
+    private int port = 42069, lastClientIndex = 1, tickFrequency = 10;
+
+	private List<string> messagesQueue = new List<string>();
 	
 	public void Initialize(int p) { 
 		connectedTcpClients = new Dictionary<int, TcpClient>();
@@ -49,17 +51,17 @@ public class Server : MonoBehaviour {
 	// 		SendMessageToClient(1, "Server Test Message"); 
 	// 		SendMessageToClient(2, "Server Test Message");  
 	// 	} 	
-	// }  	
+	// }
 	
 	/// <summary> 	
-	/// Runs in background TcpServerThread; Handles incomming TcpClient requests 	
+	/// Handles new client connections to the server.	
 	/// </summary> 	
 	private void ListenForIncommingConnectionRequests () { 		
 		try { 			
 			// Create listener on localhost port and indicated port			
 			tcpListener = new TcpListener(IPAddress.Parse("127.0.0.1"), port); 			
 			tcpListener.Start();              
-			Debug.Log("Server is listening");          			
+			Debug.Log("Server is listening");       			
 			while (true) { 		
 				connectedTcpClients[lastClientIndex] = tcpListener.AcceptTcpClient();	
 				var clientListenThread = new Thread (new ThreadStart(HandleMessagesFromClient)); 		
@@ -78,7 +80,7 @@ public class Server : MonoBehaviour {
 	/// <summary> 	
 	/// Handles incoming messages from the corresponding client
 	/// </summary> 	
-	private void HandleMessagesFromClient(){ 					
+	private void HandleMessagesFromClient(){				
 		var clientID = lastClientIndex;
 		Byte[] bytes = new Byte[1024];
 		while(true){  
@@ -90,11 +92,12 @@ public class Server : MonoBehaviour {
 					Array.Copy(bytes, 0, incommingData, 0, length);
 					// Convert byte array to string message.
 					string clientMessage = Encoding.ASCII.GetString(incommingData);
-					Debug.Log($"recieved message from client {clientID}:" + clientMessage);
+					messagesQueue.Add($"{clientID}: {clientMessage}");
+					Debug.Log($"recieved message from client {clientID}: {clientMessage}");
 				}
 			}
-		} 				
-	} 
+		}
+	}
 
 	/// <summary> 	
 	/// Send message to client using socket connection. 	
@@ -118,5 +121,17 @@ public class Server : MonoBehaviour {
 		catch (SocketException socketException) {             
 			Debug.Log("Socket exception: " + socketException);         
 		} 	
-	} 
+	}
+
+
+	/// <summary> 	
+	/// Ticks the server N times per seconds indicated by the frequency attribute.
+	/// </summary> 	
+	public void Tick(){
+
+	}
+
+	private void FixedUpdate() {
+		Tick();
+	}
 }

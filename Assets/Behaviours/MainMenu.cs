@@ -28,6 +28,8 @@ public class MainMenu : MonoBehaviour
         if(ValidatePort(port_text)){
             connManager.StartAsServer(port_text);
             SceneManager.LoadScene("MainScene");
+            // Start a client in localhost after the scene is loaded.
+            connManager.StartAsClient(port_text, "127.0.0.1");
         }else{StartCoroutine(clearErrorAfterSeconds(4));}
     }
 

@@ -1,18 +1,37 @@
+using UnityEngine;
+using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+
 
 public class NetworkObject : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
+    public bool SyncTransform;
+    public List<NetworkObject> SyncObjects = new List<NetworkObject>();
+    public List<System.Reflection.MethodInfo> methods;
+    private int numUnityFunctions = 88;
+
+    private void Start() {
         
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    public void GetAllMethodsOfType(Type t){
+        var aux = t.GetMethods();
+        methods = aux.ToList();
+        methods.RemoveRange(aux.Length-numUnityFunctions, numUnityFunctions);
     }
+    public void RunInAll(){
+        Debug.Log("Test");
+    }
+
+    IEnumerator SendSyncObjectsData(){
+        while(true){
+            yield return new WaitForSeconds(0.2f);
+            foreach(var o in SyncObjects){
+                
+            }
+        }
+    }
+
 }
